@@ -13,11 +13,24 @@ import (
 func IndexEmpleados(c *gin.Context) {
 	//Get the posts
 	var empleado []models.Empleado
-	result := initializers.DB.Find(&empleado)
+	//result := initializers.DB.Find(&empleado)
+	result2 := initializers.DB.Where("deleted_at is NULL").Scopes(models.Paginate(c)).Order("updated_at desc").Find(&empleado)
+
+	//http://localhost:3000/proveedores?page=1&page_size=10
+	/*pageStr := c.Param("page")
+	page, _ := strconv.ParseUnit(pageStr, 10, 64) //translate the offset
+	pageSizeStr := c.Param("page_size")
+	pageSize, _ := strconv.ParseUnit(pageSizeStr, 10, 64) //translate the limit
+	blogs := models.BlogsAll(page, page_size)*/
 
 	//Respond with them
-	c.JSON(200, gin.H{
+	/*c.JSON(200, gin.H{
 		"Rows Affected": result.RowsAffected,
+		"posts":         empleado,
+	})*/
+
+	c.JSON(200, gin.H{
+		"Rows Affected": result2.RowsAffected,
 		"posts":         empleado,
 	})
 
